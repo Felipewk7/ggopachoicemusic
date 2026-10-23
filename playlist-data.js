@@ -1,7 +1,7 @@
 /**
  * GGOPA Choice Music - Frutiger Aero Edition
  * Pre-set Playlist Data: https://youtube.com/playlist?list=PL7frYc2DUeyhwhL7fUT7Mcn2Zgpllg3Wo&si=nViQOaIDsuyF0237
- * 33 Músicas extraídas de GGOPA Studios
+ * 32 Músicas extraídas de GGOPA Studios
  */
 
 const PRESET_PLAYLIST_INFO = {
@@ -9,7 +9,7 @@ const PRESET_PLAYLIST_INFO = {
   author: "GGOPA Studios",
   originalUrl: "https://youtube.com/playlist?list=PL7frYc2DUeyhwhL7fUT7Mcn2Zgpllg3Wo&si=nViQOaIDsuyF0237",
   playlistId: "PL7frYc2DUeyhwhL7fUT7Mcn2Zgpllg3Wo",
-  description: "Torneio definitivo das músicas do GGOPA Studios. Qual é a melhor?"
+  description: "Torneio definitivo das 32 músicas do GGOPA Studios. Qual é a melhor?"
 };
 
 const DEFAULT_SONGS = [
@@ -236,13 +236,6 @@ const DEFAULT_SONGS = [
     author: "GGOPA Studios",
     duration: "2:31",
     thumbnail: "https://i.ytimg.com/vi/QSX5CgCwTKE/hqdefault.jpg"
-  },
-  {
-    id: "BEsEukzLuqo",
-    title: "Bear Attack (Faixa Bônus GGOPA)",
-    author: "GGOPA Studios",
-    duration: "2:45",
-    thumbnail: "https://i.ytimg.com/vi/BEsEukzLuqo/hqdefault.jpg"
   }
 ];
 

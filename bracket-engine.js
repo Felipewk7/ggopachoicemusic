@@ -1,6 +1,6 @@
 /**
- * Tournament Bracket Engine
- * Handles randomized matching, odd-number byes, round progression, and bracket history.
+ * Tournament Bracket Engine - Pure 32-Track Elimination
+ * Handles randomized matching, round progression, and bracket history.
  */
 
 class BracketEngine {
@@ -15,7 +15,7 @@ class BracketEngine {
     this.initTournament();
   }
 
-  // Fisher-Yates shuffle for true random bracket generation
+  // Fisher-Yates shuffle for randomized seeding
   shuffle(array) {
     const arr = [...array];
     for (let i = arr.length - 1; i > 0; i--) {
@@ -27,10 +27,10 @@ class BracketEngine {
 
   getRoundLabel(participantCount) {
     if (participantCount === 2) return "Grande Final";
-    if (participantCount === 3 || participantCount === 4) return "Semifinal";
-    if (participantCount <= 8) return "Quartas de Final";
-    if (participantCount <= 16) return "Oitavas de Final";
-    return `Rodada de ${participantCount} Músicas`;
+    if (participantCount === 4) return "Semifinais";
+    if (participantCount === 8) return "Quartas de Final";
+    if (participantCount === 16) return "Oitavas de Final";
+    return `Primeira Fase (${participantCount} Músicas)`;
   }
 
   initTournament() {
@@ -47,16 +47,9 @@ class BracketEngine {
   }
 
   setupRound(participants, roundIdx) {
-    let pool = [...participants];
-    let byeSong = null;
-
-    // Handle odd number of participants: 1 song gets a BYE (passes directly)
-    if (pool.length % 2 !== 0) {
-      // Last song in the randomized pool gets the bye
-      byeSong = pool.pop();
-    }
-
+    const pool = [...participants];
     const matches = [];
+
     for (let i = 0; i < pool.length; i += 2) {
       matches.push({
         id: `r${roundIdx}-m${Math.floor(i / 2)}`,
@@ -71,9 +64,8 @@ class BracketEngine {
       name: this.getRoundLabel(participants.length),
       totalParticipants: participants.length,
       matches,
-      byeSong,
       currentMatchIndex: 0,
-      winners: byeSong ? [byeSong] : [], // Bye song automatically moves to next round
+      winners: [],
       completed: false
     };
 
@@ -103,12 +95,12 @@ class BracketEngine {
     const loser = match.songA.id === winnerSong.id ? match.songB : match.songA;
     round.winners.push(winnerSong);
 
-    // Track semifinalists if in semifinals
-    if (round.totalParticipants <= 4 && round.totalParticipants > 2) {
+    // Track semifinalists
+    if (round.totalParticipants === 4) {
       this.semifinalists.push(loser);
     }
 
-    // Check if round has more matches
+    // Check if current round has more matches
     if (round.currentMatchIndex + 1 < round.matches.length) {
       round.currentMatchIndex++;
       return {
@@ -123,7 +115,7 @@ class BracketEngine {
       // Current round finished!
       round.completed = true;
 
-      // Check if tournament is finished
+      // Check if tournament has reached final winner
       if (round.winners.length === 1) {
         this.isFinished = true;
         this.champion = round.winners[0];
@@ -136,8 +128,7 @@ class BracketEngine {
         };
       }
 
-      // Prepare next round with winners
-      // Shuffle winners for fresh matchups
+      // Next round setup
       const nextParticipants = this.shuffle(round.winners);
       this.currentRoundIndex++;
       this.setupRound(nextParticipants, this.currentRoundIndex);
@@ -146,30 +137,26 @@ class BracketEngine {
       return {
         type: "ROUND_ADVANCED",
         newRound: nextRound,
-        byeSong: nextRound.byeSong,
         match: this.getCurrentMatch()
       };
     }
   }
 
-  // Get total progress percentage across the entire tournament
+  // Get total progress percentage across the tournament
   getProgress() {
-    let totalEstimatedMatches = 0;
-    let n = this.initialSongs.length;
-    // In single elimination, total matches = n - 1
-    totalEstimatedMatches = n - 1;
-
+    const totalMatches = this.initialSongs.length - 1; // 32 - 1 = 31 matches
     let completedMatches = 0;
+
     for (const r of this.rounds) {
       for (const m of r.matches) {
         if (m.winner) completedMatches++;
       }
     }
 
-    const pct = Math.min(100, Math.round((completedMatches / totalEstimatedMatches) * 100));
+    const pct = Math.min(100, Math.round((completedMatches / totalMatches) * 100));
     return {
       completedMatches,
-      totalMatches: totalEstimatedMatches,
+      totalMatches,
       percentage: pct
     };
   }
@@ -185,8 +172,7 @@ class BracketEngine {
         songA: m.songA,
         songB: m.songB,
         winner: m.winner
-      })),
-      byeSong: r.byeSong
+      }))
     }));
   }
 }
@@ -198,4 +184,3 @@ if (typeof window !== "undefined") {
 if (typeof module !== "undefined" && module.exports) {
   module.exports = BracketEngine;
 }
-

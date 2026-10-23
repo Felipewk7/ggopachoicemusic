@@ -994,6 +994,95 @@ body {
 }
 
 /* ==========================================================================
+   AERO CARD GENERATOR (Victory Shareable Image Card)
+   ========================================================================== */
+
+.aero-card-generator-section {
+  max-width: 760px;
+  margin: 30px auto 0 auto;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(220, 245, 255, 0.7) 100%);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 16px 40px rgba(0, 50, 110, 0.2), inset 0 2px 2px #ffffff;
+  padding: 24px;
+  text-align: center;
+}
+
+.generator-header h3 {
+  font-size: 20px;
+  font-weight: 900;
+  color: #0b4570;
+  margin-bottom: 6px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.generator-header p {
+  font-size: 14px;
+  font-weight: 600;
+  color: #245d85;
+  margin-bottom: 20px;
+}
+
+.card-preview-wrapper {
+  position: relative;
+  width: 100%;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 12px 35px rgba(0, 40, 90, 0.25), inset 0 1px 2px #ffffff;
+  border: 2px solid #ffffff;
+  margin-bottom: 22px;
+  background: linear-gradient(180deg, #1ea0eb 0%, #6fdd9c 100%);
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aero-card-preview-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  transition: transform 0.25s ease;
+}
+
+.aero-card-preview-img:hover {
+  transform: scale(1.015);
+}
+
+.card-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.card-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.copy-feedback-msg {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 8px 18px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #dcfce7 0%, #bbf7d0 100%);
+  border: 1px solid #86efac;
+  color: #166534;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 3px 10px rgba(34, 197, 94, 0.2);
+  animation: slideDownFade 0.3s ease;
+}
+
+
+/* ==========================================================================
    MODALS (Bracket Tree & Tracklist Preview)
    ========================================================================== */
 

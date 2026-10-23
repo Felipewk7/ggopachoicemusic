@@ -6,7 +6,7 @@
   <title>GGOPA Choice Music - Torneio Frutiger Aero</title>
   
   <!-- SEO & Social Meta -->
-  <meta name="description" content="Embate definitivo das 33 músicas da playlist GGOPA Studios no estilo Frutiger Aero. Escute, escolha a melhor e coroe a campeã!">
+  <meta name="description" content="Embate definitivo das 32 músicas da playlist GGOPA Studios no estilo Frutiger Aero. Escute, escolha a melhor e gere um card aero personalizado!">
   <meta property="og:title" content="GGOPA Choice Music - Qual é a melhor música?">
   <meta property="og:description" content="Torneio eliminatório com chaveamento aleatório e visual Frutiger Aero autêntico.">
   <meta property="og:type" content="website">
@@ -50,7 +50,7 @@
         <div class="toolbar-status">
           <div class="badge-aero">
             <span>🎵</span>
-            <span id="totalSongsCount">33 Músicas</span>
+            <span id="totalSongsCount">32 Músicas</span>
           </div>
           <div class="badge-aero">
             <span>🎲</span>
@@ -79,19 +79,6 @@
         </div>
         <div class="progress-tube">
           <div class="progress-fill" id="progressFill"></div>
-        </div>
-      </div>
-
-      <!-- Odd-number "BYE" Alert Banner -->
-      <div class="bye-banner" id="byeBanner" style="display: none;">
-        <div class="bye-content">
-          <span class="bye-icon">⭐</span>
-          <div>
-            <div class="bye-title">Passagem Direta (Bye) Sorteada!</div>
-            <div class="bye-desc">
-              A música <span class="bye-song-pill" id="byeSongName"></span> ficou sem adversário nesta fase e passou direto para a próxima rodada!
-            </div>
-          </div>
         </div>
       </div>
 
@@ -126,13 +113,13 @@
             <span>📻</span> Playlist Pré-Configurada
           </h4>
           <p>
-            Total de <strong>33 faixas musicais</strong> com sorteio aleatório a cada torneio. Quando houver número ímpar, uma faixa é sorteada para avançar direto (BYE) sem precisar duelar naquela fase!
+            Total de <strong>32 faixas musicais</strong> em um torneio mata-mata perfeito (16 duelos iniciais até a Grande Final). Ao final, o site gera um <strong>card Frutiger Aero exclusivo</strong> para você salvar com o nome da sua música campeã!
           </p>
           <div class="playlist-meta-row">
             <span class="meta-chip">🎬 GGOPA Studios</span>
-            <span class="meta-chip">🔗 Playlist Oficial do YouTube</span>
-            <span class="meta-chip">🏆 Sistema Mata-Mata</span>
-            <span class="meta-chip">✨ Design Frutiger Aero</span>
+            <span class="meta-chip">🔗 Playlist Oficial</span>
+            <span class="meta-chip">🏆 32 Músicas Mata-Mata</span>
+            <span class="meta-chip">🖼️ Gerador de Card Aero</span>
           </div>
         </div>
 
@@ -240,7 +227,7 @@
       </section>
 
       <!-- =================================================================
-           VIEW 3: VICTORY SCREEN (Podium & Champion)
+           VIEW 3: VICTORY SCREEN (Podium & Aero Image Card Generator)
            ================================================================= -->
       <section class="view-panel victory-view" id="victoryView" style="display: none;">
         <div class="trophy-container">
@@ -249,6 +236,7 @@
         <div class="victory-badge">A Grande Campeã do Torneio!</div>
         <h2 class="victory-title">A MELHOR MÚSICA DA PLAYLIST</h2>
 
+        <!-- Champion Track Details & Player -->
         <div class="champion-card">
           <div class="champion-thumb-box thumb-container">
             <img id="champThumb" src="" alt="Campeã">
@@ -264,7 +252,40 @@
           <div class="duration-chip" id="champDuration">⏱ 0:00</div>
         </div>
 
-        <div class="welcome-actions">
+        <!-- Frutiger Aero Generated Image Card Section -->
+        <div class="aero-card-generator-section">
+          <div class="generator-header">
+            <h3>🖼️ Seu Card Frutiger Aero Oficial</h3>
+            <p>Gerado automaticamente com o nome da sua música favorita para você salvar ou compartilhar!</p>
+          </div>
+
+          <!-- Hidden Canvas for HD Rendering -->
+          <canvas id="aeroCardCanvas" width="1200" height="675" style="display: none;"></canvas>
+
+          <!-- Card Image Preview -->
+          <div class="card-preview-wrapper">
+            <img id="aeroCardPreview" class="aero-card-preview-img" alt="Card Frutiger Aero da Música Campeã" src="">
+            <div id="cardGeneratingLoader" class="card-loader" style="display: none;">
+              <div class="disc-icon"></div>
+              <span>Renderizando card Aero...</span>
+            </div>
+          </div>
+
+          <!-- Card Actions -->
+          <div class="card-actions-row">
+            <button id="btnDownloadCard" class="aero-btn aero-btn-blue aero-btn-lg">
+              💾 Baixar Card Aero (.PNG)
+            </button>
+            <button id="btnCopyCard" class="aero-btn aero-btn-orange aero-btn-lg">
+              📋 Copiar Imagem
+            </button>
+          </div>
+          <div id="copyFeedback" class="copy-feedback-msg" style="display: none;">
+            ✨ Imagem copiada para a área de transferência!
+          </div>
+        </div>
+
+        <div class="welcome-actions" style="margin-top: 25px;">
           <button id="btnRestartFromVictory" class="aero-btn aero-btn-green aero-btn-lg">
             🔄 Jogar Novamente (Novo Sorteio)
           </button>
@@ -298,7 +319,7 @@
     <div class="aero-modal">
       <div class="modal-header">
         <div class="modal-title">
-          <span>🎵</span> Todas as Músicas da Playlist GGOPA
+          <span>🎵</span> Todas as 32 Músicas da Playlist GGOPA
         </div>
         <button class="aero-btn aero-btn-glass" id="btnCloseTracklist">✕ Fechar</button>
       </div>

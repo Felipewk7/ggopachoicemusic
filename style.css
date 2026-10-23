@@ -1,0 +1,1241 @@
+/* ==========================================================================
+   GGOPA CHOICE MUSIC - FRUTIGER AERO DESIGN SYSTEM
+   Authentic 2005-2012 Skeuomorphism, Aero Glass, Gloss, Auroras & Bubbles
+   ========================================================================== */
+
+:root {
+  --aero-sky-top: #2bb7ff;
+  --aero-sky-mid: #68d8d6;
+  --aero-sky-bottom: #9bf6ff;
+  --aero-grass-top: #70e000;
+  --aero-grass-dark: #38b000;
+  --aero-glass-bg: rgba(255, 255, 255, 0.45);
+  --aero-glass-border: rgba(255, 255, 255, 0.75);
+  --aero-glass-inner-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.9), inset 0 -1px 2px rgba(0, 0, 0, 0.1);
+  --aero-glass-drop-shadow: 0 12px 35px rgba(0, 50, 110, 0.22);
+  --aero-blue-btn-1: #38bdf8;
+  --aero-blue-btn-2: #0284c7;
+  --aero-green-btn-1: #4ade80;
+  --aero-green-btn-2: #16a34a;
+  --aero-orange-btn-1: #fb923c;
+  --aero-orange-btn-2: #ea580c;
+  --aero-purple-btn-1: #c084fc;
+  --aero-purple-btn-2: #9333ea;
+  --text-main: #062b48;
+  --text-muted: #1e5277;
+  --font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, "Frutiger", Calibri, system-ui, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  background: linear-gradient(180deg, #1ea0eb 0%, #48c6ef 35%, #6fdd9c 75%, #4caf50 100%);
+  background-attachment: fixed;
+  color: var(--text-main);
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  padding-bottom: 50px;
+}
+
+/* ==========================================================================
+   AERO BACKGROUND AMBIENCE (Sunlight, Auroras, Water, Floating Bubbles)
+   ========================================================================== */
+
+.aero-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Radiant sun lens flare top-right */
+.sun-flare {
+  position: absolute;
+  top: -120px;
+  right: -80px;
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 245, 170, 0.6) 25%, rgba(130, 235, 255, 0.3) 50%, rgba(255, 255, 255, 0) 70%);
+  filter: blur(20px);
+  animation: sunPulse 8s infinite alternate ease-in-out;
+}
+
+@keyframes sunPulse {
+  0% { transform: scale(0.95); opacity: 0.85; }
+  100% { transform: scale(1.08); opacity: 1; }
+}
+
+/* Aurora wave layer */
+.aurora-glow {
+  position: absolute;
+  top: 15%;
+  left: -20%;
+  width: 140%;
+  height: 350px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(76, 217, 235, 0.35), rgba(80, 245, 150, 0.2), transparent 70%);
+  filter: blur(40px);
+  transform: rotate(-5deg);
+  animation: auroraFloat 12s infinite alternate ease-in-out;
+}
+
+@keyframes auroraFloat {
+  0% { transform: translateY(0px) rotate(-5deg); }
+  100% { transform: translateY(30px) rotate(-2deg); }
+}
+
+/* Floating Frutiger Aero Bubbles */
+.bubble {
+  position: absolute;
+  bottom: -80px;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.35) 20%, rgba(130, 220, 255, 0.35) 60%, rgba(255, 255, 255, 0.8) 100%);
+  border-radius: 50%;
+  box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.9), 0 4px 10px rgba(0, 50, 100, 0.15);
+  backdrop-filter: blur(2px);
+  animation: riseUp linear infinite;
+  pointer-events: none;
+}
+
+.bubble::before {
+  content: "";
+  position: absolute;
+  top: 15%;
+  left: 20%;
+  width: 25%;
+  height: 25%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff 0%, rgba(255, 255, 255, 0) 80%);
+}
+
+@keyframes riseUp {
+  0% {
+    transform: translateY(0) scale(0.8);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-110vh) scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   APP CONTAINER & AERO WINDOW
+   ========================================================================== */
+
+.app-wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 25px auto;
+  padding: 0 16px;
+}
+
+.aero-window {
+  background: var(--aero-glass-bg);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  border-radius: 18px;
+  border: 1px solid var(--aero-glass-border);
+  box-shadow: var(--aero-glass-drop-shadow), var(--aero-glass-inner-shadow);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Windows Vista / 7 Style Aero Glass Window Header */
+.window-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(220, 240, 255, 0.6) 45%, rgba(180, 225, 255, 0.3) 50%, rgba(210, 245, 255, 0.5) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 40, 80, 0.1);
+  user-select: none;
+}
+
+.titlebar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.disc-icon {
+  width: 24px;
+  height: 24px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+  animation: spinSlow 12s linear infinite;
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.titlebar-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #0c3e66;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.titlebar-controls {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* Skeuomorphic Glass Orbs */
+.window-orb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  box-shadow: inset 0 2px 2px rgba(255, 255, 255, 0.8), inset 0 -1px 2px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.window-orb:hover {
+  transform: scale(1.15);
+  filter: brightness(1.2);
+}
+
+.window-orb.minimize {
+  background: radial-gradient(circle at 35% 35%, #ffd60a 0%, #ffaa00 70%, #d48800 100%);
+}
+
+.window-orb.maximize {
+  background: radial-gradient(circle at 35% 35%, #60d394 0%, #20bf6b 70%, #0f8e4c 100%);
+}
+
+.window-orb.close {
+  background: radial-gradient(circle at 35% 35%, #ff7675 0%, #eb3b5a 70%, #b81432 100%);
+}
+
+/* ==========================================================================
+   NAVIGATION & HEADER TOOLBAR
+   ========================================================================== */
+
+.window-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 22px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(240, 250, 255, 0.3) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.toolbar-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.badge-aero {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0b4b75;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(210, 240, 255, 0.75) 50%, rgba(185, 228, 255, 0.6) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 6px rgba(0, 60, 120, 0.12), inset 0 1px 1px #fff;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ==========================================================================
+   SKEUOMORPHIC AQUA / AERO BUTTONS
+   ========================================================================== */
+
+.aero-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: 24px;
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 12px rgba(0, 45, 90, 0.18), inset 0 1px 2px rgba(255, 255, 255, 0.9), inset 0 -2px 3px rgba(0, 0, 0, 0.12);
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+  color: #083b62;
+  overflow: hidden;
+}
+
+/* Gloss top reflection overlay */
+.aero-btn::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 6px;
+  right: 6px;
+  height: 44%;
+  border-radius: 20px 20px 8px 8px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.1) 100%);
+  pointer-events: none;
+}
+
+.aero-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 50, 110, 0.26), inset 0 1px 2px #fff, inset 0 -2px 3px rgba(0, 0, 0, 0.15);
+  filter: brightness(1.06);
+}
+
+.aero-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 6px rgba(0, 45, 90, 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.aero-btn-blue {
+  background: linear-gradient(180deg, #60c5fa 0%, #29a0e6 48%, #1085cb 52%, #229be4 100%);
+  color: #ffffff;
+  text-shadow: 0 -1px 1px rgba(0, 40, 80, 0.6);
+  border-color: #8adeff;
+}
+
+.aero-btn-green {
+  background: linear-gradient(180deg, #74eb7b 0%, #3ec848 48%, #2aa633 52%, #38bb42 100%);
+  color: #ffffff;
+  text-shadow: 0 -1px 1px rgba(0, 50, 10, 0.6);
+  border-color: #9aff9f;
+}
+
+.aero-btn-orange {
+  background: linear-gradient(180deg, #ffae42 0%, #f68c1e 48%, #e06c00 52%, #f27f0c 100%);
+  color: #ffffff;
+  text-shadow: 0 -1px 1px rgba(80, 30, 0, 0.6);
+  border-color: #ffd699;
+}
+
+.aero-btn-glass {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(225, 245, 255, 0.6) 48%, rgba(200, 235, 255, 0.45) 52%, rgba(230, 250, 255, 0.7) 100%);
+  color: #0b4570;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.aero-btn-lg {
+  padding: 13px 28px;
+  font-size: 16px;
+  border-radius: 28px;
+}
+
+/* ==========================================================================
+   PROGRESS BAR TUBE (Windows 7 / Vista Gel Bar)
+   ========================================================================== */
+
+.progress-section {
+  padding: 14px 22px;
+  background: rgba(255, 255, 255, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f4c75;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.progress-tube {
+  position: relative;
+  height: 18px;
+  background: rgba(0, 40, 80, 0.15);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25), 0 1px 1px rgba(255, 255, 255, 0.9);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(180deg, #99f6aa 0%, #3edb64 45%, #20ad41 52%, #34ca58 100%);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(46, 213, 85, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  position: relative;
+}
+
+/* Animated glossy stripe on progress bar */
+.progress-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.3) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.3) 75%,
+    transparent 75%
+  );
+  background-size: 24px 24px;
+  animation: moveStripes 1.5s linear infinite;
+}
+
+@keyframes moveStripes {
+  0% { background-position: 0 0; }
+  100% { background-position: 24px 0; }
+}
+
+/* ==========================================================================
+   ODD NUMBER "BYE" NOTICE BANNER
+   ========================================================================== */
+
+.bye-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 14px 22px 0 22px;
+  padding: 12px 18px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 250, 205, 0.85) 0%, rgba(255, 235, 150, 0.65) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 14px rgba(180, 130, 0, 0.16), inset 0 1px 1px #fff;
+  animation: slideDownFade 0.4s ease-out;
+}
+
+@keyframes slideDownFade {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.bye-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bye-icon {
+  font-size: 26px;
+  filter: drop-shadow(0 2px 4px rgba(255, 180, 0, 0.4));
+  animation: starWiggle 3s infinite ease-in-out;
+}
+
+@keyframes starWiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(10deg) scale(1.15); }
+}
+
+.bye-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #8f5800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bye-desc {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4b3600;
+}
+
+.bye-song-pill {
+  display: inline-block;
+  background: #ffffff;
+  padding: 3px 10px;
+  border-radius: 12px;
+  color: #b35900;
+  font-weight: 800;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   VIEWS: WELCOME VIEW / START SCREEN
+   ========================================================================== */
+
+.view-panel {
+  padding: 24px 22px 30px 22px;
+}
+
+.welcome-view {
+  text-align: center;
+  padding: 30px 15px;
+}
+
+.hero-logo-box {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.hero-disc {
+  width: 90px;
+  height: 90px;
+  filter: drop-shadow(0 8px 20px rgba(0, 80, 180, 0.3));
+  animation: spinSlow 20s linear infinite;
+  margin-bottom: 12px;
+}
+
+.hero-title {
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  background: linear-gradient(180deg, #0b4570 0%, #0077b6 50%, #0096c7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.9));
+  margin-bottom: 8px;
+}
+
+.hero-subtitle {
+  font-size: 17px;
+  font-weight: 600;
+  color: #174b71;
+  max-width: 650px;
+  margin: 0 auto 20px auto;
+  line-height: 1.5;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.playlist-info-card {
+  max-width: 600px;
+  margin: 0 auto 28px auto;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 24px rgba(0, 45, 90, 0.1), inset 0 1px 1px #fff;
+  text-align: left;
+}
+
+.playlist-info-card h4 {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f4c75;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.playlist-info-card p {
+  font-size: 13px;
+  color: #24587d;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.playlist-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.meta-chip {
+  background: linear-gradient(180deg, #ffffff 0%, #e8f4fc 100%);
+  padding: 4px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  color: #0b5182;
+}
+
+.welcome-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+/* ==========================================================================
+   BATTLE VIEW: 1v1 DUEL SCREEN
+   ========================================================================== */
+
+.battle-container {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 20px;
+  align-items: center;
+  position: relative;
+  margin-top: 10px;
+}
+
+/* Middle VS Badge */
+.vs-divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 5;
+}
+
+.vs-orb {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #ff5252 50%, #b30000 100%);
+  border: 3px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 25px rgba(255, 80, 80, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.9), inset 0 -3px 5px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  animation: pulseGlow 2.5s infinite alternate ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(0.96); box-shadow: 0 0 15px rgba(255, 80, 80, 0.4); }
+  100% { transform: scale(1.04); box-shadow: 0 0 30px rgba(255, 80, 80, 0.85); }
+}
+
+.vs-text-sub {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #0b4570;
+  letter-spacing: 1px;
+  margin-top: 6px;
+  text-shadow: 0 1px 0 #fff;
+}
+
+/* ==========================================================================
+   SONG COMBATANT CARDS
+   ========================================================================== */
+
+.combatant-card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(235, 248, 255, 0.55) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 12px 30px rgba(0, 50, 110, 0.16), inset 0 1px 2px #fff;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden;
+}
+
+.combatant-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(0, 60, 130, 0.22), inset 0 1px 2px #fff;
+}
+
+/* Card Header Tag */
+.combatant-tag {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.side-badge {
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.side-badge.side-a {
+  background: linear-gradient(180deg, #60c5fa 0%, #198ad1 100%);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(25, 138, 209, 0.35);
+}
+
+.side-badge.side-b {
+  background: linear-gradient(180deg, #ff7675 0%, #d63031 100%);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(214, 48, 49, 0.35);
+}
+
+.duration-chip {
+  font-size: 11px;
+  font-weight: 700;
+  color: #0b4b75;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 3px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+/* Thumbnail with glossy reflection */
+.thumb-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 30, 70, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  background: #000;
+  margin-bottom: 14px;
+}
+
+.song-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.combatant-card:hover .song-thumb {
+  transform: scale(1.04);
+}
+
+/* YouTube IFrame Embed Player wrapper */
+.player-embed-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+  background: #000;
+}
+
+.player-embed-box.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.player-embed-box iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Play Overlay Button over thumbnail */
+.thumb-play-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 20, 50, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  z-index: 1;
+}
+
+.thumb-play-overlay:hover {
+  background: rgba(0, 20, 50, 0.45);
+}
+
+.play-orb {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #29a0e6 60%, #0b598b 100%);
+  border: 2px solid #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 40, 100, 0.4), inset 0 2px 3px #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.play-orb:hover {
+  transform: scale(1.12);
+  filter: brightness(1.15);
+}
+
+.play-orb svg {
+  width: 24px;
+  height: 24px;
+  fill: #ffffff;
+  margin-left: 3px;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+}
+
+/* Song Information */
+.song-info-box {
+  margin-bottom: 14px;
+  flex: 1;
+}
+
+.song-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #093452;
+  line-height: 1.35;
+  margin-bottom: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.song-artist {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2b6c98;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Animated Sound Equalizer Bars */
+.equalizer-box {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 18px;
+  margin-top: 6px;
+}
+
+.eq-bar {
+  width: 4px;
+  height: 4px;
+  background: linear-gradient(180deg, #4ade80, #16a34a);
+  border-radius: 2px;
+  transition: height 0.15s ease;
+}
+
+.playing .eq-bar:nth-child(1) { animation: eqBounce 0.6s infinite alternate ease-in-out; }
+.playing .eq-bar:nth-child(2) { animation: eqBounce 0.4s 0.1s infinite alternate ease-in-out; }
+.playing .eq-bar:nth-child(3) { animation: eqBounce 0.8s 0.2s infinite alternate ease-in-out; }
+.playing .eq-bar:nth-child(4) { animation: eqBounce 0.5s 0.05s infinite alternate ease-in-out; }
+.playing .eq-bar:nth-child(5) { animation: eqBounce 0.7s 0.15s infinite alternate ease-in-out; }
+
+@keyframes eqBounce {
+  0% { height: 4px; }
+  100% { height: 18px; }
+}
+
+/* Big Vote Choice Button */
+.vote-btn {
+  width: 100%;
+  padding: 14px 10px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 800;
+  margin-top: auto;
+}
+
+.vote-key-hint {
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.85;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Player Toolbar under card */
+.card-audio-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.audio-state-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #175480;
+}
+
+.stop-track-btn {
+  background: none;
+  border: none;
+  font-size: 11px;
+  font-weight: 700;
+  color: #b33939;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   VICTORY SCREEN / PODIUM
+   ========================================================================== */
+
+.victory-view {
+  text-align: center;
+  padding: 30px 15px;
+}
+
+.trophy-container {
+  display: inline-block;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.trophy-orb {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff7b2 0%, #ffd000 50%, #d48b00 100%);
+  border: 4px solid #ffffff;
+  box-shadow: 0 0 40px rgba(255, 200, 0, 0.7), inset 0 3px 6px #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  animation: trophyFloat 3s infinite alternate ease-in-out;
+}
+
+@keyframes trophyFloat {
+  0% { transform: translateY(0px) rotate(-3deg); }
+  100% { transform: translateY(-8px) rotate(3deg); }
+}
+
+.victory-badge {
+  display: inline-block;
+  padding: 6px 18px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #fffae6 0%, #ffeaa7 100%);
+  border: 1px solid #ffd32a;
+  color: #946200;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 3px 10px rgba(255, 180, 0, 0.3);
+  margin-bottom: 12px;
+}
+
+.victory-title {
+  font-size: 32px;
+  font-weight: 900;
+  color: #0b4570;
+  margin-bottom: 18px;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.9);
+}
+
+.champion-card {
+  max-width: 500px;
+  margin: 0 auto 28px auto;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(225, 245, 255, 0.8) 100%);
+  border-radius: 22px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 16px 45px rgba(0, 60, 140, 0.28), inset 0 2px 2px #fff;
+  padding: 22px;
+}
+
+.champion-thumb-box {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  margin-bottom: 14px;
+}
+
+.champion-thumb-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.champion-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #0a385c;
+  margin-bottom: 4px;
+}
+
+.champion-artist {
+  font-size: 15px;
+  font-weight: 700;
+  color: #2b74a3;
+  margin-bottom: 14px;
+}
+
+/* ==========================================================================
+   MODALS (Bracket Tree & Tracklist Preview)
+   ========================================================================== */
+
+.aero-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 30, 60, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.aero-modal-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.aero-modal {
+  width: 100%;
+  max-width: 850px;
+  max-height: 85vh;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 20px 60px rgba(0, 40, 90, 0.35), inset 0 1px 2px #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.92);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.aero-modal-backdrop.active .aero-modal {
+  transform: scale(1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #e2f2fc 100%);
+  border-bottom: 1px solid rgba(0, 60, 120, 0.1);
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0b4570;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Bracket Tree Visualization */
+.bracket-rounds-container {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 15px;
+}
+
+.bracket-round-col {
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.round-col-title {
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #0c4d7e;
+  text-align: center;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.bracket-match-node {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 60, 120, 0.15);
+  box-shadow: 0 3px 8px rgba(0, 40, 80, 0.08);
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.match-slot {
+  padding: 7px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f0f4f8;
+  color: #334e68;
+}
+
+.match-slot:last-child {
+  border-bottom: none;
+}
+
+.match-slot.winner {
+  background: linear-gradient(90deg, #e6f9ed 0%, #f7fbf8 100%);
+  font-weight: 800;
+  color: #166534;
+}
+
+.match-slot.bye-slot {
+  background: linear-gradient(90deg, #fffbeb 0%, #ffffff 100%);
+  color: #b45309;
+  font-style: italic;
+}
+
+/* Tracklist Grid */
+.tracklist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.track-item-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 6px rgba(0, 40, 80, 0.06);
+}
+
+.track-item-num {
+  font-size: 12px;
+  font-weight: 800;
+  color: #196f9e;
+  width: 22px;
+}
+
+.track-item-thumb {
+  width: 50px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.track-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.track-item-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0b395b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-item-dur {
+  font-size: 11px;
+  color: #486581;
+}
+
+/* ==========================================================================
+   RESPONSIVENESS (Mobile & Tablets)
+   ========================================================================== */
+
+@media (max-width: 860px) {
+  .battle-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .vs-divider {
+    flex-direction: row;
+    gap: 10px;
+    margin: -6px 0;
+  }
+
+  .vs-orb {
+    width: 48px;
+    height: 48px;
+    font-size: 16px;
+  }
+
+  .hero-title {
+    font-size: 26px;
+  }
+
+  .window-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbar-actions {
+    justify-content: center;
+  }
+
+  .bye-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-wrapper {
+    margin: 10px auto;
+    padding: 0 8px;
+  }
+
+  .view-panel {
+    padding: 16px 12px;
+  }
+
+  .combatant-card {
+    padding: 12px;
+  }
+
+  .vote-btn {
+    padding: 12px 6px;
+    font-size: 14px;
+  }
+}

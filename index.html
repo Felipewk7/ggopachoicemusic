@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GGOPA Choice Music - Torneio Frutiger Aero</title>
+  
+  <!-- SEO & Social Meta -->
+  <meta name="description" content="Embate definitivo das 33 músicas da playlist GGOPA Studios no estilo Frutiger Aero. Escute, escolha a melhor e coroe a campeã!">
+  <meta property="og:title" content="GGOPA Choice Music - Qual é a melhor música?">
+  <meta property="og:description" content="Torneio eliminatório com chaveamento aleatório e visual Frutiger Aero autêntico.">
+  <meta property="og:type" content="website">
+
+  <!-- Favicon: Glossy Aero Music Disc -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3CradialGradient id='g1' cx='35%25' cy='35%25' r='60%25'%3E%3Cstop offset='0%25' stop-color='%23ffffff'/%3E%3Cstop offset='30%25' stop-color='%2338bdf8'/%3E%3Cstop offset='70%25' stop-color='%230284c7'/%3E%3Cstop offset='100%25' stop-color='%230c4a6e'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='30' fill='url(%23g1)' stroke='%23ffffff' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='10' fill='%23ffffff' opacity='0.9'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%230284c7'/%3E%3Cpath d='M10 24 A24 24 0 0 1 54 24' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' fill='none' opacity='0.6'/%3E%3C/svg%3E">
+
+  <!-- Frutiger Aero Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient Dynamic Background (Flares, Auroras & Rising Bubbles) -->
+  <div class="aero-background" id="aeroBackground">
+    <div class="sun-flare"></div>
+    <div class="aurora-glow"></div>
+  </div>
+
+  <!-- Main Application Wrapper -->
+  <main class="app-wrapper">
+    <div class="aero-window">
+      
+      <!-- Windows Vista / 7 Style Aero Glass Window Header -->
+      <header class="window-titlebar">
+        <div class="titlebar-left">
+          <svg class="disc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="12" cy="12" r="10" stroke="#0077b6" stroke-width="2" fill="rgba(255,255,255,0.7)"/>
+            <circle cx="12" cy="12" r="3" fill="#0077b6"/>
+          </svg>
+          <span class="titlebar-title">GGOPA Choice Music - Aura + Ego Tournament</span>
+        </div>
+        <div class="titlebar-controls">
+          <span class="window-orb minimize" title="Minimizar"></span>
+          <span class="window-orb maximize" title="Maximizar"></span>
+          <span class="window-orb close" title="Fechar"></span>
+        </div>
+      </header>
+
+      <!-- Navigation & Status Toolbar -->
+      <div class="window-toolbar">
+        <div class="toolbar-status">
+          <div class="badge-aero">
+            <span>🎵</span>
+            <span id="totalSongsCount">33 Músicas</span>
+          </div>
+          <div class="badge-aero">
+            <span>🎲</span>
+            <span>Chaveamento Aleatório</span>
+          </div>
+        </div>
+
+        <div class="toolbar-actions">
+          <button id="btnSoundToggle" class="aero-btn aero-btn-green" title="Alternar efeitos sonoros">
+            🔊 Som: Ligado
+          </button>
+          <button id="btnViewBracket" class="aero-btn aero-btn-blue" title="Ver árvore do torneio">
+            🗺️ Chaveamento
+          </button>
+          <button id="btnRestart" class="aero-btn aero-btn-orange" title="Reiniciar com novo sorteio">
+            🔄 Novo Sorteio
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Section (Gel Tube) -->
+      <div class="progress-section">
+        <div class="progress-header">
+          <span id="roundName">Fase Inicial</span>
+          <span id="matchCount">Aguardando início...</span>
+        </div>
+        <div class="progress-tube">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- Odd-number "BYE" Alert Banner -->
+      <div class="bye-banner" id="byeBanner" style="display: none;">
+        <div class="bye-content">
+          <span class="bye-icon">⭐</span>
+          <div>
+            <div class="bye-title">Passagem Direta (Bye) Sorteada!</div>
+            <div class="bye-desc">
+              A música <span class="bye-song-pill" id="byeSongName"></span> ficou sem adversário nesta fase e passou direto para a próxima rodada!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================
+           VIEW 1: WELCOME SCREEN (Start Screen)
+           ================================================================= -->
+      <section class="view-panel welcome-view" id="welcomeView">
+        <div class="hero-logo-box">
+          <svg class="hero-disc" viewBox="0 0 64 64">
+            <defs>
+              <radialGradient id="heroGrad" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="25%" stop-color="#38bdf8"/>
+                <stop offset="70%" stop-color="#0284c7"/>
+                <stop offset="100%" stop-color="#075985"/>
+              </radialGradient>
+            </defs>
+            <circle cx="32" cy="32" r="30" fill="url(#heroGrad)" stroke="#ffffff" stroke-width="2.5"/>
+            <circle cx="32" cy="32" r="11" fill="#ffffff" opacity="0.95"/>
+            <circle cx="32" cy="32" r="5" fill="#0284c7"/>
+            <path d="M12 26 A22 22 0 0 1 52 26" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.7"/>
+          </svg>
+          <h1 class="hero-title">GGOPA CHOICE MUSIC</h1>
+          <p class="hero-subtitle">
+            Embate de escolha eliminatório da playlist oficial <strong>Aura + ego playlist</strong> do <strong>GGOPA Studios</strong>.
+            A cada duelo, ouça as duas músicas e escolha quem avança até restar apenas a grande campeã!
+          </p>
+        </div>
+
+        <div class="playlist-info-card">
+          <h4>
+            <span>📻</span> Playlist Pré-Configurada
+          </h4>
+          <p>
+            Total de <strong>33 faixas musicais</strong> com sorteio aleatório a cada torneio. Quando houver número ímpar, uma faixa é sorteada para avançar direto (BYE) sem precisar duelar naquela fase!
+          </p>
+          <div class="playlist-meta-row">
+            <span class="meta-chip">🎬 GGOPA Studios</span>
+            <span class="meta-chip">🔗 Playlist Oficial do YouTube</span>
+            <span class="meta-chip">🏆 Sistema Mata-Mata</span>
+            <span class="meta-chip">✨ Design Frutiger Aero</span>
+          </div>
+        </div>
+
+        <div class="welcome-actions">
+          <button id="btnStartTournament" class="aero-btn aero-btn-green aero-btn-lg">
+            ▶ Iniciar Torneio
+          </button>
+          <button id="btnViewTracks" class="aero-btn aero-btn-glass aero-btn-lg">
+            📜 Ver Lista de Músicas
+          </button>
+        </div>
+      </section>
+
+      <!-- =================================================================
+           VIEW 2: BATTLE SCREEN (1v1 Head-to-Head Duel)
+           ================================================================= -->
+      <section class="view-panel battle-view" id="battleView" style="display: none;">
+        <div class="battle-container">
+          
+          <!-- COMBATANT A (Esquerda) -->
+          <article class="combatant-card" id="cardA">
+            <div class="combatant-tag">
+              <span class="side-badge side-a">Música 1</span>
+              <span class="duration-chip" id="durationA">⏱ 0:00</span>
+            </div>
+
+            <div class="thumb-container">
+              <img id="thumbA" class="song-thumb" src="" alt="Thumbnail Música A">
+              <div class="thumb-play-overlay" id="playOverlayA" title="Ouvir Música 1">
+                <div class="play-orb">
+                  <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+                </div>
+              </div>
+              <div class="player-embed-box" id="playerContainerA"></div>
+            </div>
+
+            <div class="card-audio-controls">
+              <span class="audio-state-text" id="audioStateA">Pronto</span>
+              <div class="equalizer-box">
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+              </div>
+            </div>
+
+            <div class="song-info-box">
+              <h3 class="song-title" id="titleA">Título da Música A</h3>
+              <p class="song-artist" id="artistA">GGOPA Studios</p>
+            </div>
+
+            <button id="btnVoteA" class="aero-btn aero-btn-blue vote-btn">
+              ⭐ Escolher Esta Música
+              <span class="vote-key-hint">[Pressione 1 ou A]</span>
+            </button>
+          </article>
+
+          <!-- CENTER VS DIVIDER -->
+          <div class="vs-divider">
+            <div class="vs-orb">VS</div>
+            <span class="vs-text-sub">Duelo</span>
+          </div>
+
+          <!-- COMBATANT B (Direita) -->
+          <article class="combatant-card" id="cardB">
+            <div class="combatant-tag">
+              <span class="side-badge side-b">Música 2</span>
+              <span class="duration-chip" id="durationB">⏱ 0:00</span>
+            </div>
+
+            <div class="thumb-container">
+              <img id="thumbB" class="song-thumb" src="" alt="Thumbnail Música B">
+              <div class="thumb-play-overlay" id="playOverlayB" title="Ouvir Música 2">
+                <div class="play-orb">
+                  <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+                </div>
+              </div>
+              <div class="player-embed-box" id="playerContainerB"></div>
+            </div>
+
+            <div class="card-audio-controls">
+              <span class="audio-state-text" id="audioStateB">Pronto</span>
+              <div class="equalizer-box">
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+              </div>
+            </div>
+
+            <div class="song-info-box">
+              <h3 class="song-title" id="titleB">Título da Música B</h3>
+              <p class="song-artist" id="artistB">GGOPA Studios</p>
+            </div>
+
+            <button id="btnVoteB" class="aero-btn aero-btn-orange vote-btn">
+              ⭐ Escolher Esta Música
+              <span class="vote-key-hint">[Pressione 2 ou B]</span>
+            </button>
+          </article>
+
+        </div>
+      </section>
+
+      <!-- =================================================================
+           VIEW 3: VICTORY SCREEN (Podium & Champion)
+           ================================================================= -->
+      <section class="view-panel victory-view" id="victoryView" style="display: none;">
+        <div class="trophy-container">
+          <div class="trophy-orb">👑</div>
+        </div>
+        <div class="victory-badge">A Grande Campeã do Torneio!</div>
+        <h2 class="victory-title">A MELHOR MÚSICA DA PLAYLIST</h2>
+
+        <div class="champion-card">
+          <div class="champion-thumb-box thumb-container">
+            <img id="champThumb" src="" alt="Campeã">
+            <div class="thumb-play-overlay" id="champPlayOverlay">
+              <div class="play-orb">
+                <svg viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+              </div>
+            </div>
+            <div class="player-embed-box" id="champPlayerBox"></div>
+          </div>
+          <h3 class="champion-title" id="champTitle">Título da Campeã</h3>
+          <p class="champion-artist" id="champArtist">GGOPA Studios</p>
+          <div class="duration-chip" id="champDuration">⏱ 0:00</div>
+        </div>
+
+        <div class="welcome-actions">
+          <button id="btnRestartFromVictory" class="aero-btn aero-btn-green aero-btn-lg">
+            🔄 Jogar Novamente (Novo Sorteio)
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- =================================================================
+       MODAL 1: BRACKET TREE VISUALIZER
+       ================================================================= -->
+  <div class="aero-modal-backdrop" id="bracketModalBackdrop">
+    <div class="aero-modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🗺️</span> Árvore de Chaveamento do Torneio
+        </div>
+        <button class="aero-btn aero-btn-glass" id="btnCloseBracket">✕ Fechar</button>
+      </div>
+      <div class="modal-body">
+        <div class="bracket-rounds-container" id="bracketTreeContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       MODAL 2: FULL TRACKLIST PREVIEW
+       ================================================================= -->
+  <div class="aero-modal-backdrop" id="tracklistModalBackdrop">
+    <div class="aero-modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🎵</span> Todas as Músicas da Playlist GGOPA
+        </div>
+        <button class="aero-btn aero-btn-glass" id="btnCloseTracklist">✕ Fechar</button>
+      </div>
+      <div class="modal-body">
+        <div class="tracklist-grid" id="tracklistGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- YouTube IFrame API Script -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+
+  <!-- Application Modules -->
+  <script src="playlist-data.js"></script>
+  <script src="audio-fx.js"></script>
+  <script src="bracket-engine.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>

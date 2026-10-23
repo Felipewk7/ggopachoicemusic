@@ -6,40 +6,43 @@ Um web app no autêntico estilo **Frutiger Aero** (vidro aero, botões aqua/gel,
 
 ---
 
-## ✨ Funcionalidades Principais
+## ✨ Novidades e Funcionalidades Principais
 
-- 🎲 **Chaveamento 100% Aleatório:** A cada início ou reinício de torneio, as 32 músicas são sorteadas e embaralhadas (algoritmo Fisher-Yates), gerando confrontos únicos toda vez que você jogar.
+- 🎨 **3 Temas Frutiger Aero Alternáveis em Tempo Real:**
+  - 🌿 **Clássico:** Céu azul cristalino, colinas verdes esmeralda, reflexos dourados de sol e botões aqua.
+  - 🔮 **Roxo Ametista (Crepúsculo):** Gradiente crepuscular profundo, auroras em magenta e violeta elétrico, vidros lavanda e botões ametista.
+  - 🌅 **Laranja com Ciano (Pôr do Sol Tropical):** Céu vibrante de entardecer tangerina com águas tropicais em ciano turquesa, brilho solar quente e botões contrastantes.
+  - *Sua preferência de tema é salva automaticamente e altera tanto a interface quanto as cores do Card gerado ao final!*
+
+- ⚡ **Animações de Transição de Rodada:**
+  - Ao concluir todos os duelos de uma fase (ex: *Primeira Fase* ➜ *Oitavas de Final* ➜ *Quartas* ➜ *Semifinais* ➜ *Grande Final*), uma tela de transição com efeito de vidro, zoom dinâmico e som harmônico anuncia a nova etapa e o número de músicas restantes.
+
+- 🗺️ **Botão de Chaveamento Dinâmico & Árvore Interativa:**
+  - **Botão com Badge em Tempo Real:** O botão de chaveamento na barra superior exibe um contador pulsante que acompanha a fase e duelo atual (ex: *16 Duelos*, *Oitavas (3/8)*, *Grande Final!*).
+  - **Destaque do Duelo Atual:** No modal da árvore de chaveamento, o confronto ativo em andamento ganha borda neon pulsante e a insígnia `⚔️ DUELO ATUAL`.
+  - **Botão "🎯 Ir para Duelo Atual":** Centraliza e rola suavemente a visualização até o duelo em andamento.
+
 - 🏆 **Torneio Mata-Mata Perfeito (32 Faixas):**
   - **Primeira Fase:** 16 duelos (32 músicas)
   - **Oitavas de Final:** 8 duelos (16 músicas)
   - **Quartas de Final:** 4 duelos (8 músicas)
   - **Semifinais:** 2 duelos (4 músicas)
   - **Grande Final:** 1 duelo (2 músicas) ➜ **Grande Campeã!**
+
 - 🖼️ **Gerador de Card Frutiger Aero Exclusivo:**
-  - Ao final do torneio, o site renderiza dinamicamente em alta resolução (1200x675 HD) um **Card Frutiger Aero comemorativo** com o nome da música vencedora eleita pelo usuário.
-  - Botão **💾 Baixar Card Aero (.PNG)** para salvar no seu computador ou celular.
-  - Botão **📋 Copiar Imagem** para colar direto no Discord, WhatsApp ou redes sociais.
-- 🎧 **Player Integrado do YouTube:** Escute cada faixa diretamente na interface sem sair do site. Quando você dá play em uma música, a outra pausa automaticamente para não sobrepor o áudio.
-- 🎚️ **Visualizador de Áudio (Equalizer):** Barras de áudio animadas em tempo real durante a reprodução.
+  - Renderiza em alta resolução (**1200 x 675 HD**) um card Frutiger Aero comemorativo personalizado com o nome da música vencedora e adaptado às cores do tema visual que você escolheu.
+  - **💾 Baixar Card Aero (.PNG)** para salvar no seu computador ou celular.
+  - **📋 Copiar Imagem** para colar direto no Discord, WhatsApp ou redes sociais.
+
+- 🎧 **Player Integrado do YouTube:** Escute cada faixa diretamente na interface sem sair do site. Quando você dá play em uma música, a outra pausa automaticamente.
+- 🎚️ **Equalizador Animado:** Barras de áudio saltam e dançam em tempo real durante a reprodução.
 - ⌨️ **Atalhos Rápidos de Teclado:**
   - `1` ou `A`: Votar na **Música 1** (Esquerda)
   - `2` ou `B`: Votar na **Música 2** (Direita)
   - `Barra de Espaço`: Alternar reprodução entre as faixas
   - `Esc`: Fechar modais
-- 🗺️ **Visualizador da Árvore de Chaveamento:** Acompanhe em tempo real quais músicas venceram cada duelo ao longo de todas as fases.
-- 📜 **Lista Completa das 32 Faixas:** Consulte todas as faixas da playlist com suas durações e miniaturas.
-- 🔊 **Efeitos Sonoros Retrô (Web Audio API):** Sons de clique em vidro, chime aquático de voto e fanfarra triunfal no estilo Windows Vista / 7 (com botão de silenciar/ativar).
+- 🔊 **Efeitos Sonoros Retrô (Web Audio API):** Clique em vidro, chime de voto, acorde de transição de fase e fanfarra triunfal do Windows Vista / 7 (com botão de silenciar/ativar).
 - 📱 **Totalmente Responsivo:** Design adaptado para telas mobile, tablets e computadores.
-
----
-
-## 🎨 Estilo Frutiger Aero
-
-- Gradientes celestes e aquáticos luminosos.
-- Efeito vidro Aero com desfoque de fundo (`backdrop-filter: blur`).
-- Botões tridimensionais skeuomórficos com brilho superior (*gloss*).
-- Bolhas geradas e animadas dinamicamente subindo pela tela.
-- Janela com barra de título clássica e botões orbe brilhantes (minimizar, maximizar, fechar).
 
 ---
 
@@ -60,7 +63,7 @@ Como o projeto é construído em puro **HTML5, CSS3 e JavaScript**, você não p
 Para publicar este projeto gratuitamente no **GitHub Pages**:
 
 1. No **GitHub Desktop** (ou via terminal Git):
-   - Faça o commit de todos os arquivos do repositório (`index.html`, `style.css`, `app.js`, `playlist-data.js`, `audio-fx.js`, `bracket-engine.js`, `.nojekyll`, etc.).
+   - Faça o commit dos arquivos do repositório (`index.html`, `style.css`, `app.js`, `playlist-data.js`, `audio-fx.js`, `bracket-engine.js`, `.nojekyll`, etc.).
    - Clique em **Publish repository** ou faça o push para o seu repositório no GitHub.
 2. No seu repositório no GitHub pelo navegador:
    - Acesse a aba **Settings** (Configurações).

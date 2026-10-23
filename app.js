@@ -1,5 +1,5 @@
 /**
- * GGOPA Choice Music - App Controller (32 Tracks & Frutiger Aero Card Generator)
+ * GGOPA Choice Music - App Controller (32 Tracks, 3 Frutiger Aero Themes, Round Transitions & Dynamic Bracket)
  * Integrates Frutiger Aero UI, YouTube IFrame API, Bracket Engine, and Audio FX.
  */
 
@@ -10,7 +10,7 @@ let currentPlayingSide = null; // 'a', 'b', or null
 let currentChampion = null;
 let ytApiReady = false;
 
-// DOM Elements
+// DOM Elements - Views
 const welcomeView = document.getElementById("welcomeView");
 const battleView = document.getElementById("battleView");
 const victoryView = document.getElementById("victoryView");
@@ -20,6 +20,12 @@ const roundNameEl = document.getElementById("roundName");
 const matchCountEl = document.getElementById("matchCount");
 const progressFill = document.getElementById("progressFill");
 const totalSongsCountEl = document.getElementById("totalSongsCount");
+const bracketBtnBadge = document.getElementById("bracketBtnBadge");
+
+// Round Transition Splash
+const roundSplashOverlay = document.getElementById("roundSplashOverlay");
+const splashRoundTitle = document.getElementById("splashRoundTitle");
+const splashRoundSubtitle = document.getElementById("splashRoundSubtitle");
 
 // Combatant A elements
 const cardA = document.getElementById("cardA");
@@ -64,6 +70,7 @@ const bracketModalBackdrop = document.getElementById("bracketModalBackdrop");
 const tracklistModalBackdrop = document.getElementById("tracklistModalBackdrop");
 const bracketTreeContainer = document.getElementById("bracketTreeContainer");
 const tracklistGrid = document.getElementById("tracklistGrid");
+const btnJumpToCurrentMatch = document.getElementById("btnJumpToCurrentMatch");
 
 // Buttons & Toggles
 const btnStartTournament = document.getElementById("btnStartTournament");
@@ -74,6 +81,47 @@ const btnRestart = document.getElementById("btnRestart");
 const btnRestartFromVictory = document.getElementById("btnRestartFromVictory");
 const btnCloseBracket = document.getElementById("btnCloseBracket");
 const btnCloseTracklist = document.getElementById("btnCloseTracklist");
+
+// Theme Selector
+const themePills = document.querySelectorAll(".theme-pill");
+
+/* ==========================================================================
+   THEME SWITCHER SYSTEM (Classic, Purple, Orange-Cyan)
+   ========================================================================== */
+
+function initThemes() {
+  const savedTheme = localStorage.getItem("ggopa_aero_theme") || "classic";
+  setTheme(savedTheme, false);
+
+  themePills.forEach(pill => {
+    pill.addEventListener("click", () => {
+      const themeVal = pill.getAttribute("data-theme-val");
+      setTheme(themeVal, true);
+    });
+  });
+}
+
+function setTheme(themeName, playSound = true) {
+  document.body.setAttribute("data-theme", themeName);
+  localStorage.setItem("ggopa_aero_theme", themeName);
+
+  themePills.forEach(pill => {
+    if (pill.getAttribute("data-theme-val") === themeName) {
+      pill.classList.add("active");
+    } else {
+      pill.classList.remove("active");
+    }
+  });
+
+  if (playSound && window.audioFX) {
+    audioFX.playClick();
+  }
+
+  // If currently on Victory screen, regenerate the Aero card with the new theme colors!
+  if (victoryView && victoryView.style.display === "block" && currentChampion) {
+    generateFrutigerAeroCard(currentChampion);
+  }
+}
 
 /* ==========================================================================
    INITIALIZATION & BACKGROUND BUBBLES
@@ -130,7 +178,7 @@ btnSoundToggle.addEventListener("click", () => {
 });
 
 /* ==========================================================================
-   TOURNAMENT CONTROL
+   TOURNAMENT CONTROL & ROUND TRANSITIONS
    ========================================================================== */
 
 function startTournament() {
@@ -152,6 +200,33 @@ function updateProgress() {
   roundNameEl.textContent = round.name;
   matchCountEl.textContent = `Duelo ${round.currentMatchIndex + 1} de ${round.matches.length}`;
   progressFill.style.width = `${progress.percentage}%`;
+
+  // Update Dynamic Bracket Badge
+  if (bracketBtnBadge) {
+    if (round.matches.length === 1) {
+      bracketBtnBadge.textContent = "Grande Final!";
+    } else {
+      bracketBtnBadge.textContent = `${round.name.split(" ")[0]} (${round.currentMatchIndex + 1}/${round.matches.length})`;
+    }
+  }
+}
+
+function triggerRoundTransition(newRound, callback) {
+  if (!roundSplashOverlay) {
+    if (callback) callback();
+    return;
+  }
+
+  splashRoundTitle.textContent = newRound.name.toUpperCase();
+  splashRoundSubtitle.textContent = `${newRound.totalParticipants} Músicas Restantes • Chaveamento Atualizado!`;
+  roundSplashOverlay.style.display = "flex";
+
+  audioFX.playRoundTransition();
+
+  setTimeout(() => {
+    roundSplashOverlay.style.display = "none";
+    if (callback) callback();
+  }, 1500);
 }
 
 function renderCurrentMatch() {
@@ -277,7 +352,9 @@ function voteForSong(side) {
     if (result.type === "TOURNAMENT_COMPLETE") {
       showVictoryScreen(result.champion);
     } else if (result.type === "ROUND_ADVANCED") {
-      renderCurrentMatch();
+      triggerRoundTransition(result.newRound, () => {
+        renderCurrentMatch();
+      });
     } else if (result.type === "NEXT_MATCH") {
       renderCurrentMatch();
     }
@@ -288,7 +365,7 @@ btnVoteA.addEventListener("click", () => voteForSong("a"));
 btnVoteB.addEventListener("click", () => voteForSong("b"));
 
 /* ==========================================================================
-   VICTORY SCREEN & FRUTIGER AERO CARD GENERATOR
+   VICTORY SCREEN & MULTI-THEME FRUTIGER AERO CARD GENERATOR
    ========================================================================== */
 
 function showVictoryScreen(champion) {
@@ -339,7 +416,7 @@ function createConfettiBubbles() {
 
 /**
  * Draws an authentic, high-resolution (1200x675) Frutiger Aero Card
- * featuring the winning song title, GGOPA Studios branding, auroras, and bubbles.
+ * Adapts its palette dynamically based on the active theme (Classic, Purple, Orange-Cyan).
  */
 function generateFrutigerAeroCard(champion) {
   const canvas = aeroCardCanvas;
@@ -350,7 +427,6 @@ function generateFrutigerAeroCard(champion) {
   cardGeneratingLoader.style.display = "flex";
   aeroCardPreview.style.display = "none";
 
-  // Preload thumbnail with CORS fallback
   const thumbImg = new Image();
   thumbImg.crossOrigin = "anonymous";
 
@@ -365,32 +441,59 @@ function generateFrutigerAeroCard(champion) {
   thumbImg.onload = () => proceed(thumbImg);
   thumbImg.onerror = () => proceed(null);
 
-  // Safety timeout in case of CORS hang
   setTimeout(() => proceed(null), 1200);
 
   thumbImg.src = champion.thumbnail;
 }
 
 function drawAeroCanvas(ctx, W, H, champion, thumbImg) {
-  // 1. SKY GRADIENT (Daylight Azure to Clear Cyan to Lush Green)
+  const theme = document.body.getAttribute("data-theme") || "classic";
+
+  // 1. DYNAMIC SKY GRADIENT ACCORDING TO THEME
   const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-  bgGrad.addColorStop(0, "#0091ea");
-  bgGrad.addColorStop(0.32, "#29b6f6");
-  bgGrad.addColorStop(0.65, "#7ee081");
-  bgGrad.addColorStop(1, "#38b000");
+  if (theme === "purple") {
+    bgGrad.addColorStop(0, "#190232");
+    bgGrad.addColorStop(0.35, "#5b1484");
+    bgGrad.addColorStop(0.70, "#8e24aa");
+    bgGrad.addColorStop(1, "#c084fc");
+  } else if (theme === "orange-cyan") {
+    bgGrad.addColorStop(0, "#ea580c");
+    bgGrad.addColorStop(0.32, "#f97316");
+    bgGrad.addColorStop(0.60, "#fbbf24");
+    bgGrad.addColorStop(0.85, "#06b6d4");
+    bgGrad.addColorStop(1, "#0284c7");
+  } else {
+    // Classic Aero
+    bgGrad.addColorStop(0, "#0091ea");
+    bgGrad.addColorStop(0.32, "#29b6f6");
+    bgGrad.addColorStop(0.65, "#7ee081");
+    bgGrad.addColorStop(1, "#38b000");
+  }
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, W, H);
 
-  // 2. RADIANT SUN FLARE (Top-Right)
+  // 2. RADIANT SUN FLARE
   const sunGrad = ctx.createRadialGradient(1100, 30, 10, 1100, 30, 480);
-  sunGrad.addColorStop(0, "rgba(255, 255, 255, 1)");
-  sunGrad.addColorStop(0.2, "rgba(255, 245, 175, 0.75)");
-  sunGrad.addColorStop(0.48, "rgba(140, 235, 255, 0.35)");
-  sunGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+  if (theme === "purple") {
+    sunGrad.addColorStop(0, "rgba(255, 255, 255, 1)");
+    sunGrad.addColorStop(0.2, "rgba(245, 190, 255, 0.75)");
+    sunGrad.addColorStop(0.48, "rgba(192, 132, 252, 0.35)");
+    sunGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+  } else if (theme === "orange-cyan") {
+    sunGrad.addColorStop(0, "rgba(255, 255, 255, 1)");
+    sunGrad.addColorStop(0.2, "rgba(254, 215, 170, 0.8)");
+    sunGrad.addColorStop(0.48, "rgba(34, 211, 238, 0.4)");
+    sunGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+  } else {
+    sunGrad.addColorStop(0, "rgba(255, 255, 255, 1)");
+    sunGrad.addColorStop(0.2, "rgba(255, 245, 175, 0.75)");
+    sunGrad.addColorStop(0.48, "rgba(140, 235, 255, 0.35)");
+    sunGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+  }
   ctx.fillStyle = sunGrad;
   ctx.fillRect(0, 0, W, H);
 
-  // 3. AURORA / LIQUID WAVES (Bottom-Mid)
+  // 3. AURORA / LIQUID WAVES
   ctx.save();
   ctx.beginPath();
   ctx.moveTo(0, 460);
@@ -399,9 +502,19 @@ function drawAeroCanvas(ctx, W, H, champion, thumbImg) {
   ctx.lineTo(0, H);
   ctx.closePath();
   const waveGrad = ctx.createLinearGradient(0, 420, 0, H);
-  waveGrad.addColorStop(0, "rgba(255, 255, 255, 0.38)");
-  waveGrad.addColorStop(0.4, "rgba(120, 245, 210, 0.28)");
-  waveGrad.addColorStop(1, "rgba(46, 180, 80, 0.55)");
+  if (theme === "purple") {
+    waveGrad.addColorStop(0, "rgba(255, 255, 255, 0.38)");
+    waveGrad.addColorStop(0.4, "rgba(232, 121, 249, 0.35)");
+    waveGrad.addColorStop(1, "rgba(147, 51, 234, 0.65)");
+  } else if (theme === "orange-cyan") {
+    waveGrad.addColorStop(0, "rgba(255, 255, 255, 0.38)");
+    waveGrad.addColorStop(0.4, "rgba(34, 211, 238, 0.4)");
+    waveGrad.addColorStop(1, "rgba(2, 132, 199, 0.6)");
+  } else {
+    waveGrad.addColorStop(0, "rgba(255, 255, 255, 0.38)");
+    waveGrad.addColorStop(0.4, "rgba(120, 245, 210, 0.28)");
+    waveGrad.addColorStop(1, "rgba(46, 180, 80, 0.55)");
+  }
   ctx.fillStyle = waveGrad;
   ctx.fill();
   ctx.restore();
@@ -429,19 +542,22 @@ function drawAeroCanvas(ctx, W, H, champion, thumbImg) {
   const winH = 565;
   const radius = 26;
 
-  // Window Shadow
   ctx.save();
-  ctx.shadowColor = "rgba(0, 40, 95, 0.32)";
-  ctx.shadowBlur = 32;
+  ctx.shadowColor = "rgba(0, 30, 80, 0.35)";
+  ctx.shadowBlur = 34;
   ctx.shadowOffsetY = 16;
 
-  // Frosted Glass Fill
-  ctx.fillStyle = "rgba(255, 255, 255, 0.62)";
+  if (theme === "purple") {
+    ctx.fillStyle = "rgba(250, 242, 255, 0.68)";
+  } else if (theme === "orange-cyan") {
+    ctx.fillStyle = "rgba(255, 250, 244, 0.70)";
+  } else {
+    ctx.fillStyle = "rgba(255, 255, 255, 0.66)";
+  }
   roundRect(ctx, winX, winY, winW, winH, radius);
   ctx.fill();
   ctx.restore();
 
-  // Outer Crystalline Border
   ctx.save();
   ctx.strokeStyle = "rgba(255, 255, 255, 0.95)";
   ctx.lineWidth = 2.5;
@@ -449,7 +565,7 @@ function drawAeroCanvas(ctx, W, H, champion, thumbImg) {
   ctx.stroke();
   ctx.restore();
 
-  // Window Beveled Top Gloss
+  // Window Top Gloss Reflection
   ctx.save();
   ctx.beginPath();
   roundRect(ctx, winX + 2, winY + 2, winW - 4, 170, { tl: radius, tr: radius, br: 0, bl: 0 });
@@ -460,17 +576,16 @@ function drawAeroCanvas(ctx, W, H, champion, thumbImg) {
   ctx.fill();
   ctx.restore();
 
-  // 6. WINDOW TITLEBAR
-  // Window Orbs (Close, Minimize, Maximize)
+  // 6. WINDOW TITLEBAR ORBS & TITLE
   drawOrb(ctx, winX + 26, winY + 28, 8, "#ff5f56", "#e0443e"); // Red
   drawOrb(ctx, winX + 48, winY + 28, 8, "#ffbd2e", "#dea123"); // Amber
   drawOrb(ctx, winX + 70, winY + 28, 8, "#27c93f", "#1aab29"); // Green
 
   ctx.font = "bold 14px 'Segoe UI', Calibri, sans-serif";
-  ctx.fillStyle = "#094067";
+  ctx.fillStyle = theme === "purple" ? "#3b0764" : (theme === "orange-cyan" ? "#7c2d12" : "#094067");
   ctx.fillText("GGOPA CHOICE MUSIC • CARD OFICIAL DA CAMPEÃ", winX + 96, winY + 33);
 
-  // 7. LEFT SIDE: ALBUM ART / HOLOGRAPHIC MUSIC DISC
+  // 7. LEFT SIDE: ARTWORK & REFLECTION
   const artX = winX + 45;
   const artY = winY + 75;
   const artW = 390;
@@ -478,36 +593,30 @@ function drawAeroCanvas(ctx, W, H, champion, thumbImg) {
   const artRadius = 18;
 
   ctx.save();
-  // Frame Shadow
   ctx.shadowColor = "rgba(0, 30, 70, 0.35)";
   ctx.shadowBlur = 18;
   ctx.shadowOffsetY = 8;
 
   if (thumbImg) {
-    // Clip rounded rect and draw image
     roundRect(ctx, artX, artY, artW, artH, artRadius);
     ctx.clip();
     ctx.drawImage(thumbImg, artX, artY, artW, artH);
 
-    // Glass shine over thumbnail
     const artGloss = ctx.createLinearGradient(artX, artY, artX, artY + artH * 0.5);
     artGloss.addColorStop(0, "rgba(255, 255, 255, 0.65)");
     artGloss.addColorStop(1, "rgba(255, 255, 255, 0)");
     ctx.fillStyle = artGloss;
     ctx.fillRect(artX, artY, artW, artH * 0.5);
   } else {
-    // Draw 3D Aero Glass Holographic Disc
-    drawAeroDiscArt(ctx, artX, artY, artW, artH, artRadius);
+    drawAeroDiscArt(ctx, artX, artY, artW, artH, artRadius, theme);
   }
   ctx.restore();
 
-  // White border around artwork
   ctx.strokeStyle = "#ffffff";
   ctx.lineWidth = 3;
   roundRect(ctx, artX, artY, artW, artH, artRadius);
   ctx.stroke();
 
-  // Reflection underneath artwork
   drawMirrorReflection(ctx, artX, artY, artW, artH, 60);
 
   // 8. RIGHT SIDE: CHAMPIONSHIP TITLES & BADGES
@@ -540,7 +649,7 @@ function drawAeroCanvas(ctx, W, H, champion, thumbImg) {
   ctx.font = "900 36px 'Segoe UI', Calibri, sans-serif";
   ctx.shadowColor = "rgba(255, 255, 255, 0.9)";
   ctx.shadowBlur = 8;
-  ctx.fillStyle = "#073356";
+  ctx.fillStyle = theme === "purple" ? "#2e0854" : (theme === "orange-cyan" ? "#1c1917" : "#073356");
 
   const maxTitleWidth = 470;
   const lines = wrapText(ctx, champion.title, maxTitleWidth);
@@ -554,7 +663,7 @@ function drawAeroCanvas(ctx, W, H, champion, thumbImg) {
 
   // Artist & Origin
   ctx.font = "700 19px 'Segoe UI', Calibri, sans-serif";
-  ctx.fillStyle = "#0284c7";
+  ctx.fillStyle = theme === "purple" ? "#9333ea" : (theme === "orange-cyan" ? "#0284c7" : "#0284c7");
   ctx.fillText("🎵 " + (champion.author || "GGOPA Studios") + " • Aura + Ego Playlist", textX, curY);
 
   curY += 34;
@@ -569,7 +678,7 @@ function drawAeroCanvas(ctx, W, H, champion, thumbImg) {
   roundRect(ctx, textX, curY - 18, statW, 30, 15);
   ctx.fill();
   ctx.stroke();
-  ctx.fillStyle = "#0b4e7a";
+  ctx.fillStyle = theme === "purple" ? "#581c87" : (theme === "orange-cyan" ? "#7c2d12" : "#0b4e7a");
   ctx.fillText(statText, textX + 12, curY + 3);
   ctx.restore();
 
@@ -577,7 +686,7 @@ function drawAeroCanvas(ctx, W, H, champion, thumbImg) {
   const footY = winY + winH - 45;
   ctx.save();
   ctx.font = "600 13px 'Segoe UI', Calibri, sans-serif";
-  ctx.fillStyle = "#1e587e";
+  ctx.fillStyle = theme === "purple" ? "#581c87" : (theme === "orange-cyan" ? "#7c2d12" : "#1e587e");
   ctx.fillText("✨ Eleita no GGOPA Choice Music • Torneio Eliminatório Frutiger Aero", winX + 45, footY);
 
   const rightBrand = "ggopachoicemusic • GitHub Pages";
@@ -586,12 +695,8 @@ function drawAeroCanvas(ctx, W, H, champion, thumbImg) {
   ctx.restore();
 }
 
-/**
- * Draws a 3D Frutiger Aero transparent bubble on canvas
- */
 function drawCanvasBubble(ctx, x, y, r) {
   ctx.save();
-  // Outer gradient
   const bGrad = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.1, x, y, r);
   bGrad.addColorStop(0, "rgba(255, 255, 255, 0.85)");
   bGrad.addColorStop(0.3, "rgba(255, 255, 255, 0.35)");
@@ -603,18 +708,13 @@ function drawCanvasBubble(ctx, x, y, r) {
   ctx.arc(x, y, r, 0, Math.PI * 2);
   ctx.fill();
 
-  // Specular gleam highlight
   ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
   ctx.beginPath();
   ctx.ellipse(x - r * 0.35, y - r * 0.35, r * 0.3, r * 0.18, -Math.PI / 4, 0, Math.PI * 2);
   ctx.fill();
-
   ctx.restore();
 }
 
-/**
- * Draws an Aero Titlebar Orb
- */
 function drawOrb(ctx, x, y, r, c1, c2) {
   ctx.save();
   const orbGrad = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.1, x, y, r);
@@ -633,9 +733,6 @@ function drawOrb(ctx, x, y, r, c1, c2) {
   ctx.restore();
 }
 
-/**
- * Draws mirror reflection below artwork
- */
 function drawMirrorReflection(ctx, x, y, w, h, refH) {
   ctx.save();
   const refGrad = ctx.createLinearGradient(x, y + h, x, y + h + refH);
@@ -646,44 +743,49 @@ function drawMirrorReflection(ctx, x, y, w, h, refH) {
   ctx.restore();
 }
 
-/**
- * Fallback Holographic Aero Disc if thumbnail CORS fails
- */
-function drawAeroDiscArt(ctx, x, y, w, h, r) {
+function drawAeroDiscArt(ctx, x, y, w, h, r, theme) {
   const cx = x + w / 2;
   const cy = y + h / 2;
   const discR = 85;
 
-  ctx.fillStyle = "#0c2340";
+  ctx.fillStyle = theme === "purple" ? "#240046" : (theme === "orange-cyan" ? "#1e293b" : "#0c2340");
   roundRect(ctx, x, y, w, h, r);
   ctx.fill();
 
-  // Outer iridescent disc
   const discGrad = ctx.createRadialGradient(cx, cy, 10, cx, cy, discR);
-  discGrad.addColorStop(0, "#ffffff");
-  discGrad.addColorStop(0.3, "#38bdf8");
-  discGrad.addColorStop(0.7, "#0284c7");
-  discGrad.addColorStop(1, "#082f49");
+  if (theme === "purple") {
+    discGrad.addColorStop(0, "#ffffff");
+    discGrad.addColorStop(0.3, "#e879f9");
+    discGrad.addColorStop(0.7, "#9333ea");
+    discGrad.addColorStop(1, "#3b0764");
+  } else if (theme === "orange-cyan") {
+    discGrad.addColorStop(0, "#ffffff");
+    discGrad.addColorStop(0.3, "#fb923c");
+    discGrad.addColorStop(0.7, "#0284c7");
+    discGrad.addColorStop(1, "#0f172a");
+  } else {
+    discGrad.addColorStop(0, "#ffffff");
+    discGrad.addColorStop(0.3, "#38bdf8");
+    discGrad.addColorStop(0.7, "#0284c7");
+    discGrad.addColorStop(1, "#082f49");
+  }
+
   ctx.fillStyle = discGrad;
   ctx.beginPath();
   ctx.arc(cx, cy, discR, 0, Math.PI * 2);
   ctx.fill();
 
-  // Spindle
   ctx.fillStyle = "#ffffff";
   ctx.beginPath();
   ctx.arc(cx, cy, 24, 0, Math.PI * 2);
   ctx.fill();
 
-  ctx.fillStyle = "#0284c7";
+  ctx.fillStyle = theme === "purple" ? "#9333ea" : "#0284c7";
   ctx.beginPath();
   ctx.arc(cx, cy, 12, 0, Math.PI * 2);
   ctx.fill();
 }
 
-/**
- * Helper to auto-wrap long text on canvas
- */
 function wrapText(ctx, text, maxWidth) {
   const words = text.split(" ");
   const lines = [];
@@ -703,9 +805,6 @@ function wrapText(ctx, text, maxWidth) {
   return lines;
 }
 
-/**
- * Helper to draw rounded rectangle
- */
 function roundRect(ctx, x, y, w, h, r) {
   if (typeof r === "number") {
     r = { tl: r, tr: r, br: r, bl: r };
@@ -723,9 +822,6 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-/**
- * Completes the card generation and wires download/copy actions
- */
 function finalizeCardExport(canvas, champion) {
   try {
     const dataUrl = canvas.toDataURL("image/png");
@@ -733,7 +829,6 @@ function finalizeCardExport(canvas, champion) {
     cardGeneratingLoader.style.display = "none";
     aeroCardPreview.style.display = "block";
 
-    // Download action
     btnDownloadCard.onclick = () => {
       audioFX.playClick();
       const cleanName = champion.title
@@ -748,7 +843,6 @@ function finalizeCardExport(canvas, champion) {
       link.click();
     };
 
-    // Copy to clipboard action
     btnCopyCard.onclick = async () => {
       audioFX.playClick();
       try {
@@ -763,7 +857,6 @@ function finalizeCardExport(canvas, champion) {
               copyFeedback.style.display = "none";
             }, 3500);
           } catch (e) {
-            // Fallback download if clipboard is not permitted
             btnDownloadCard.click();
           }
         });
@@ -778,13 +871,17 @@ function finalizeCardExport(canvas, champion) {
 }
 
 /* ==========================================================================
-   MODALS: BRACKET TREE & TRACKLIST
+   DYNAMIC BRACKET TREE VISUALIZER
    ========================================================================== */
 
 function renderBracketTree() {
   if (!bracketEngine) return;
   const tree = bracketEngine.getBracketTree();
   bracketTreeContainer.innerHTML = "";
+
+  const activeRound = bracketEngine.getCurrentRound();
+  const activeRoundIndex = bracketEngine.currentRoundIndex;
+  const activeMatchIndex = activeRound ? activeRound.currentMatchIndex : -1;
 
   tree.forEach((round) => {
     const col = document.createElement("div");
@@ -795,14 +892,26 @@ function renderBracketTree() {
     title.textContent = round.name;
     col.appendChild(title);
 
-    round.matches.forEach((m) => {
+    round.matches.forEach((m, mIdx) => {
       const node = document.createElement("div");
       node.className = "bracket-match-node";
+
+      const isCurrentActive = round.index === activeRoundIndex && mIdx === activeMatchIndex && !bracketEngine.isFinished;
+      if (isCurrentActive) {
+        node.classList.add("current-active-match");
+        node.id = "currentActiveMatchEl";
+      }
 
       const aWinner = m.winner && m.winner.id === m.songA.id;
       const bWinner = m.winner && m.winner.id === m.songB.id;
 
+      let indicatorHtml = "";
+      if (isCurrentActive) {
+        indicatorHtml = `<div class="current-match-indicator">⚔️ DUELO ATUAL</div>`;
+      }
+
       node.innerHTML = `
+        ${indicatorHtml}
         <div class="match-slot ${aWinner ? 'winner' : ''}">
           <span>${m.songA.title}</span>
           ${aWinner ? '<span>🏆</span>' : ''}
@@ -816,6 +925,17 @@ function renderBracketTree() {
     });
 
     bracketTreeContainer.appendChild(col);
+  });
+}
+
+// Shortcut to jump / center directly on active match
+if (btnJumpToCurrentMatch) {
+  btnJumpToCurrentMatch.addEventListener("click", () => {
+    audioFX.playClick();
+    const activeEl = document.getElementById("currentActiveMatchEl");
+    if (activeEl) {
+      activeEl.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+    }
   });
 }
 
@@ -842,6 +962,14 @@ btnViewBracket.addEventListener("click", () => {
   audioFX.playClick();
   renderBracketTree();
   bracketModalBackdrop.classList.add("active");
+
+  // Auto-scroll to current active duel after opening
+  setTimeout(() => {
+    const activeEl = document.getElementById("currentActiveMatchEl");
+    if (activeEl) {
+      activeEl.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+    }
+  }, 180);
 });
 
 btnCloseBracket.addEventListener("click", () => {
@@ -917,6 +1045,7 @@ document.querySelectorAll(".window-orb").forEach((orb) => {
 // Setup on DOM Load
 document.addEventListener("DOMContentLoaded", () => {
   initBackgroundBubbles();
+  initThemes();
   updateSoundButton();
   currentSongs = getActiveSongs();
   if (totalSongsCountEl) {

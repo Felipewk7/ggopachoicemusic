@@ -136,6 +136,40 @@ class AeroAudio {
     });
   }
 
+  // Swelling crystalline chord for round transitions
+  playRoundTransition() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    // Harmonious ascending chord: F4 -> A4 -> C5 -> E5 -> A5
+    const notes = [
+      { f: 349.23, d: 0.35, wait: 0 },
+      { f: 440.00, d: 0.40, wait: 0.06 },
+      { f: 523.25, d: 0.45, wait: 0.12 },
+      { f: 659.25, d: 0.55, wait: 0.18 },
+      { f: 880.00, d: 0.70, wait: 0.25 }
+    ];
+
+    notes.forEach(item => {
+      const t = this.ctx.currentTime + item.wait;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(item.f, t);
+
+      gain.gain.setValueAtTime(0.16, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + item.d);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(t);
+      osc.stop(t + item.d);
+    });
+  }
+
   // Windows Vista / 7 style Victory Chime Fanfare
   playVictory() {
     if (this.muted) return;

@@ -17,7 +17,7 @@
   <!-- Frutiger Aero Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-theme="classic">
 
   <!-- Ambient Dynamic Background (Flares, Auroras & Rising Bubbles) -->
   <div class="aero-background" id="aeroBackground">
@@ -45,16 +45,22 @@
         </div>
       </header>
 
-      <!-- Navigation & Status Toolbar -->
+      <!-- Navigation & Status Toolbar with Theme Switcher -->
       <div class="window-toolbar">
         <div class="toolbar-status">
           <div class="badge-aero">
             <span>🎵</span>
             <span id="totalSongsCount">32 Músicas</span>
           </div>
-          <div class="badge-aero">
-            <span>🎲</span>
-            <span>Chaveamento Aleatório</span>
+
+          <!-- Theme Switcher Controls -->
+          <div class="theme-selector-box" title="Alternar Estilo Frutiger Aero">
+            <span class="theme-label">Estilo:</span>
+            <div class="theme-pill-group">
+              <button class="theme-pill active" data-theme-val="classic" title="Aero Clássico (Azul & Verde)">🌿 Clássico</button>
+              <button class="theme-pill" data-theme-val="purple" title="Aero Roxo (Ametista)">🔮 Roxo</button>
+              <button class="theme-pill" data-theme-val="orange-cyan" title="Aero Laranja & Ciano (Pôr do Sol)">🌅 Laranja</button>
+            </div>
           </div>
         </div>
 
@@ -62,9 +68,14 @@
           <button id="btnSoundToggle" class="aero-btn aero-btn-green" title="Alternar efeitos sonoros">
             🔊 Som: Ligado
           </button>
-          <button id="btnViewBracket" class="aero-btn aero-btn-blue" title="Ver árvore do torneio">
-            🗺️ Chaveamento
+          
+          <!-- Dynamic Bracket Button with Live Round Badge -->
+          <button id="btnViewBracket" class="aero-btn aero-btn-blue dynamic-bracket-btn" title="Ver chaveamento dinâmico">
+            <span class="btn-bracket-icon">🗺️</span>
+            <span>Chaveamento</span>
+            <span class="bracket-btn-badge" id="bracketBtnBadge">16 Duelos</span>
           </button>
+
           <button id="btnRestart" class="aero-btn aero-btn-orange" title="Reiniciar com novo sorteio">
             🔄 Novo Sorteio
           </button>
@@ -119,6 +130,7 @@
             <span class="meta-chip">🎬 GGOPA Studios</span>
             <span class="meta-chip">🔗 Playlist Oficial</span>
             <span class="meta-chip">🏆 32 Músicas Mata-Mata</span>
+            <span class="meta-chip">🎨 3 Estilos Aero Alternáveis</span>
             <span class="meta-chip">🖼️ Gerador de Card Aero</span>
           </div>
         </div>
@@ -256,7 +268,7 @@
         <div class="aero-card-generator-section">
           <div class="generator-header">
             <h3>🖼️ Seu Card Frutiger Aero Oficial</h3>
-            <p>Gerado automaticamente com o nome da sua música favorita para você salvar ou compartilhar!</p>
+            <p>Gerado automaticamente com o nome da sua música favorita no tema visual escolhido!</p>
           </div>
 
           <!-- Hidden Canvas for HD Rendering -->
@@ -296,7 +308,19 @@
   </main>
 
   <!-- =================================================================
-       MODAL 1: BRACKET TREE VISUALIZER
+       ROUND TRANSITION SPLASH SCREEN
+       ================================================================= -->
+  <div class="round-splash-overlay" id="roundSplashOverlay" style="display: none;">
+    <div class="round-splash-card">
+      <div class="splash-badge">⚡ NOVA FASE DO TORNEIO ⚡</div>
+      <h2 class="splash-title" id="splashRoundTitle">OITAVAS DE FINAL</h2>
+      <p class="splash-subtitle" id="splashRoundSubtitle">16 Músicas Restantes • Duelos Decisivos!</p>
+      <div class="splash-orb">⚔️</div>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       MODAL 1: DYNAMIC BRACKET TREE VISUALIZER
        ================================================================= -->
   <div class="aero-modal-backdrop" id="bracketModalBackdrop">
     <div class="aero-modal">
@@ -304,7 +328,12 @@
         <div class="modal-title">
           <span>🗺️</span> Árvore de Chaveamento do Torneio
         </div>
-        <button class="aero-btn aero-btn-glass" id="btnCloseBracket">✕ Fechar</button>
+        <div class="modal-header-actions">
+          <button class="aero-btn aero-btn-green" id="btnJumpToCurrentMatch" style="font-size: 12px; padding: 6px 14px;">
+            🎯 Ir para Duelo Atual
+          </button>
+          <button class="aero-btn aero-btn-glass" id="btnCloseBracket">✕ Fechar</button>
+        </div>
       </div>
       <div class="modal-body">
         <div class="bracket-rounds-container" id="bracketTreeContainer"></div>
